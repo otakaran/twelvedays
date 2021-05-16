@@ -16,14 +16,31 @@
 #'
 #' @export
 
+make_phrase <- function(num, num_word, item, verb, adjective, location) {
+  stopifnot(is.numeric(num))
+  stopifnot(is.character(num_word))
+  stopifnot(is.character(item) | is.na(item))
+  stopifnot(is.character(verb) | is.na(verb))
+  stopifnot(is.character(adjective) | is.na(adjective))
+  stopifnot(is.character(location) | is.na(location))
 
+  nums_str=c("and a", "two", "three", "four", "five", "six",
+             "seven", "eight", "nine", "ten", "eleven", "twelve")
 
-make_phrase <- function(num, num_word, item, verb, adjective, location){
+  if (num > 1) {
+    item = pluralize_gift(item)
+  }
 
-  verb <- str_replace_na(verb, "")
+  if ((is.na(verb) | verb == "") & (is.na(location) | location == "")) {
+    line = str_glue(nums_str[num], adjective, item, .sep = " ")
+  }
+  else if (is.na(location) | location == "") {
+    line = str_glue(nums_str[num], item, verb, .sep = " ")
+  }
+  else {
+    line = str_glue(nums_str[num], item, location, .sep = " ")
+  }
 
-  #????
-
-
+  return(line)
 }
 

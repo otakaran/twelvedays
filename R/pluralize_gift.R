@@ -10,11 +10,15 @@
 #' @import purrr
 #'
 #' @export
-pluralize_gift <- function(gift){
 
-gift <- gift %>%
-  str_replace()
+pluralize_gift <- function(gift) {
+  stopifnot(is.character(gift))
+  stopifnot(is.vector(gift) | is.atomic(gift))
 
-return(gift)
+  gift <- gift %>%
+    str_replace("y$", "ie") %>%
+    str_replace("$", "s") %>%
+    str_replace("ooses", "eese")
 
+  return(gift)
 }

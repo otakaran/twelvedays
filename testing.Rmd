@@ -1,0 +1,141 @@
+---
+title: "testing"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(glue)
+library(stringr)
+library(tidyverse)
+```
+
+## R Markdown
+
+```{r}
+#' Puts the various parts of speech together into a full phrase.
+#' @param num An integer
+#' @param num_word A string corresponding to the integer
+#' @param item A string
+#' @param verb A string
+#' @param adjective A string
+#' @param location A string
+#'
+#' @return A string containing the words in grammatical order.
+
+make_phrase <- function(num, num_word, item, verb, adjective, location) {
+  stopifnot(is.numeric(num))
+  stopifnot(is.character(num_word))
+  stopifnot(is.character(item) | is.na(item))
+  stopifnot(is.character(verb) | is.na(verb))
+  stopifnot(is.character(adjective) | is.na(adjective))
+  stopifnot(is.character(location) | is.na(location))
+  
+  nums_str=c("and a", "two", "three", "four", "five", "six",
+             "seven", "eight", "nine", "ten", "eleven", "twelve")
+  
+  if (num > 1) {
+    item = pluralize_gift(item)
+  }
+  
+  if ((is.na(verb) | verb == "") & (is.na(location) | location == "")) {
+    line = str_glue(nums_str[num], adjective, item, .sep = " ")
+  }
+  else if (is.na(location) | location == "") {
+    line = str_glue(nums_str[num], item, verb, .sep = " ")
+  }
+  else {
+    line = str_glue(nums_str[num], item, location, .sep = " ")
+  }
+  
+  return(line)
+}
+
+```
+
+```{r}
+make_phrase(num = 10, 
+            num_word = "ten", 
+            item = "lords", 
+            verb = "a-leaping", 
+            adjective = "", 
+            location = "")
+
+xmas <- xmas %>%
+  mutate(Full.Phrase = pmap(list(num=Day, 
+                                 num_word=Day.in.Words, 
+                                 item=Gift.Item, 
+                                 verb=Verb, 
+                                 adjective=Adjective, 
+                                 location=Location), 
+                            make_phrase)
+  )
+```
+
+
+```{r}
+#' Produces the string for one day of the song.
+#'
+#' @param dataset A data frame containing information about gifts
+#' @param line The number of the line for the day you want to sing about
+#' @param phrase_col The variable name for the column in the dataset that
+#' contains the gift phrases
+#'
+#' @return A string singing the line of the song with all gifts for the given day.
+
+sing_day <- function(dataset, line, phrase_col){
+  stopifnot(is.data.frame(dataset))
+  stopifnot(is.numeric(line))
+  stopifnot(line > 0 & line <= length(row.names(dataset)))
+
+  phrases <- dataset %>% pull({{phrase_col}})
+  
+  ret_string = str_glue("On the ", dataset[line, 2], " day of Christmas, my true love sent to me,")
+  
+  if (line == 1) {
+    # We have to modify the phrase for line one if it is by itself
+    phrase = str_replace(phrases[1], "and ", "")
+    ret_string <- str_glue(ret_string, phrase, .sep = "\n")
+  }
+  else {
+    phrases <- rev(phrases[1:line])
+    ret_string <- str_glue(ret_string, paste(phrases, collapse = ",\n"), .sep = "\n")
+  }
+  ret_string <- str_glue(ret_string, ".")
+  return(ret_string)
+}
+
+```
+
+```{r}
+sing_day(xmas, 1, Full.Phrase)
+```
+
+
+```{r}
+#' Takes a noun and makes it plural
+#'
+#' @param gift A string or vector of strings
+#' @return A string or vector of strings with the pluralized words
+
+pluralize_gift <- function(gift) {
+  stopifnot(is.character(gift))
+  stopifnot(is.vector(gift) | is.atomic(gift))
+
+  gift <- gift %>%
+    str_replace("y$", "ie") %>%
+    str_replace("$", "s") %>%
+    str_replace("ooses", "eese")
+
+  return(gift)
+}
+```
+
+```{r}
+pluralize_gift(xmas$Gift.Item)
+
+purrr::map_chr(xmas$Gift.Item, pluralize_gift)
+```
+
+
+
