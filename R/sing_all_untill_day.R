@@ -17,7 +17,7 @@
 sing_all_untill_day <- function(dataset, max_day, phrase_col) {
   stopifnot(is.data.frame(dataset))
   stopifnot(is.numeric(max_day))
-  stopifnot(line > 0 & line <= length(row.names(dataset)))
+  stopifnot(max_day > 0 & max_day <= length(row.names(dataset)))
 
   result <- lapply(1:max_day, sing_day, dataset = dataset, phrase_col = Full.Phrase) %>%
     str_c(collapse = "\n\n") %>%
