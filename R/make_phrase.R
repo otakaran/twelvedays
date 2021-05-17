@@ -1,7 +1,7 @@
 #' Puts the various parts of speech together into a full phrase.
 #'
 #' @param num An integer
-#' @param num_word A string corresponding to the integer
+#' @param num_word A string corresponding to the integer (OVERWRITTEN)
 #' @param item A string
 #' @param verb A string
 #' @param adjective A string
@@ -18,7 +18,7 @@
 
 make_phrase <- function(num, num_word, item, verb, adjective, location) {
   stopifnot(is.numeric(num))
-  stopifnot(is.character(num_word) | in.na(num_word))
+  stopifnot(is.character(num_word) | is.na(num_word))
   stopifnot(is.character(item) | is.na(item))
   stopifnot(is.character(verb) | is.na(verb))
   stopifnot(is.character(adjective) | is.na(adjective))
