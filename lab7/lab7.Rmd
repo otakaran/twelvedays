@@ -1,5 +1,5 @@
 ---
-title: "Lab 7"
+title: "Lab 6"
 date: "`r Sys.Date()`"
 output:
   rmdformats::html_clean:
@@ -10,6 +10,7 @@ output:
 ```{r setup, include=FALSE}
 library(knitr)
 library(rmdformats)
+library(tidyverse)
 
 ## Global options
 options(max.print="75")
@@ -23,32 +24,34 @@ opts_chunk$set(echo=TRUE,
 opts_knit$set(width=75)
 ```
 
+## Include the code from my GitHub
+### <https://github.com/otakaran/twelvedays>
 ```{r}
 # https://github.com/otakaran/twelvedays
 library(twelvedays)
+```
+
+### Importing the dataset
+```{r}
 xmas2 <- read.csv("https://www.dropbox.com/s/ap2hqssese1ki4j/xmas_2.csv?dl=1")
 ```
 
+### Preparing the dataset by generating the phrases
 ```{r}
 xmas2 <- xmas2 %>%
-  mutate(Full.Phrase = pmap(list(num=Day, 
-                                 num_word=Day.in.Words, 
-                                 item=Gift.Item, 
-                                 verb=Verb, 
-                                 adjective=Adjective, 
-                                 location=Location), 
+  mutate(Full.Phrase = pmap(list(num = Day, 
+                                 num_word = Day.in.Words, 
+                                 item = Gift.Item, 
+                                 verb = Verb, 
+                                 adjective = Adjective, 
+                                 location = Location), 
                             make_phrase))
 
 #apply(xmas2, 1:10, Full.Phrase, sing_day)
 
 ```
 
-```{r}
-lapply(1:12, sing_day, dataset = xmas2, phrase_col = Full.Phrase) %>%
-  str_c(collapse = "\n\n") %>%
-  str_glue()
-```
-
+### Sing for all of the days
 ```{r}
 sing_all_untill_day(xmas2, 12, Full.Phrase)
 ```

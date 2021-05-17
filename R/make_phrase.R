@@ -26,26 +26,23 @@ make_phrase <- function(num, num_word, item, verb, adjective, location) {
 
   nums_str=c("and a", "Two", "Three", "Four", "Five", "Six",
              "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve")
+  number_text = nums_str[num]
 
   # Grammar rule
-  if (num == 1 & str_detect(substr(item, 1, 1), "a|e|i|o|u")) { nums_str = "and an" }
+  if (num == 1 & str_detect(substr(item, 1, 1), "a|e|i|o|u")) { number_text = "and an" }
 
   # Pluralize if more than one of an item
   if (num > 1) { item = pluralize_gift(item) }
 
-  # If function was given a num_word use it, otherwise use hard-coded list
-  if (is.na(num_word) | num_word == "") { num_word = nums_str[num] }
-
   if ((is.na(verb) | verb == "") & (is.na(location) | location == "")) {
-    line = str_glue(num_word, adjective, item, .sep = " ")
+    line = str_glue(number_text, adjective, item, .sep = " ")
   }
   else if (is.na(location) | location == "") {
-    line = str_glue(num_word, item, verb, .sep = " ")
+    line = str_glue(number_text, item, verb, .sep = " ")
   }
   else {
-    line = str_glue(num_word, item, location, .sep = " ")
+    line = str_glue(number_text, item, location, .sep = " ")
   }
 
   return(line)
 }
-
