@@ -18,11 +18,11 @@
 
 make_phrase <- function(num, num_word, item, verb, adjective, location) {
   stopifnot(is.numeric(num))
-  stopifnot(is.character(num_word) | is.na(num_word))
-  stopifnot(is.character(item) | is.na(item))
-  stopifnot(is.character(verb) | is.na(verb))
-  stopifnot(is.character(adjective) | is.na(adjective))
-  stopifnot(is.character(location) | is.na(location))
+  stopifnot(is.character(num_word) |is.na(num_word))
+  stopifnot(is.character(item) |is.na(item))
+  stopifnot(is.character(verb) |is.na(verb))
+  stopifnot(is.character(adjective) |is.na(adjective))
+  stopifnot(is.character(location) |is.na(location))
 
   nums_str=c("and a", "Two", "Three", "Four", "Five", "Six",
              "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve")
